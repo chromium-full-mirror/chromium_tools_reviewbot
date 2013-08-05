@@ -1,6 +1,0 @@
-from google.appengine.ext import ndb
-
-class AppConfig(ndb.Model):
-  """Application configuration data."""
-  app_client_id = ndb.StringProperty()
-  service_account_key = ndb.BlobProperty()
