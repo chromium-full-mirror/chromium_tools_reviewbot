@@ -1,0 +1,5 @@
+This is an appengine app that implements automated commenting on code reviews
+posted on the codereview.chromium.org Rietveld instance. This works by
+forwarding code review emails to the app via WATCHLISTS (or manually if
+desired), the app parsing the email, pulling code review data from Rietveld and
+then posting comments back on the code review.
