@@ -39,6 +39,12 @@ def CommonChecks(input_api, output_api):
   finally:
     sys.path = sys_path_backup
 
+  output.extend(input_api.canned_checks.RunUnitTestsInDirectory(
+    input_api,
+    output_api,
+    '.',
+    whitelist=[r'.*_test\.py$']))
+
   return output
 
 
