@@ -1,0 +1,33 @@
+When adding a new policy setting, please consider the following:
+
+- Ideally, your new policy should be expressing the intention of an
+  administrator and/or cover a well-scoped user-visible behavior of the
+  browser as opposed to an implementation-specific parameter. Consider
+  that your implementation may change in the future, and you might have
+  to re-implement your policy on top of the new feature implementation.
+- Make sure your policy definition has proper supported_on declarations
+  specifying the platform and versions this policy is supported on.
+- Make sure feature flags are correct. In particular:
+  - dynamic_refresh - whether your feature can adjust to changes in
+    policy at run time. You typically use PrefChangeRegistrar to do so.
+  - per_profile - whether your policy is browser-global or can be set
+    independently for each Chrome Profile. This is usually true if you
+    read the policy value from the Profile's PrefService and false if
+    you read it from the local_state PrefService.
+  - can_be_recommended - whether your feature supports admin-supplied
+    default values that the user can override.
+- Make sure you put a helpful policy description:
+  - Describe the effect of setting the policy in a way that makes sense
+    to somebody who is not intimately familiar with your feature, such
+    as administrators and other Chromium developers.
+  - Do mention behavior for the cases where the policy gets ignored
+    (i.e. when not configured and for booleans where only one value is
+    effective). It's nice for completeness and admins have been asking
+    specifically for this piece of information in the past.
+- Write a browser_test for you new policy. The ideal test would fire up
+  the browser with the policy set and check whether the policy affects
+  user-visible behavior in the intended way. See
+  chrome/browser/policy/policy_browsertest.cc for examples.
+- If you're adding a device policy for Chrome OS, be sure to update
+  chrome/browser/chromeos/policy/device_policy_decoder_chromeos.{h,cc}
+  so the policy shows up on the chrome://policy page.

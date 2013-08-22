@@ -1,0 +1,17 @@
+When modifying an existing policy setting, please consider the following:
+
+- Make sure the policy meta data is up-to-date, in particular
+  supported_on, and the feature flags.
+- In general, don't change policy semantics in a way that is
+  incompatible (as determined by user/admin-visible behavior) with
+  previous semantics. In particular, consider that existing policy
+  deployments may affect both old and new browser versions, and both
+  should behave according to the admin's intentions.
+- It is OK to expand semantics of policy values as long as the previous
+  policy description is compatible with the new behavior.
+- It is OK to update feature implementations and the policy description
+  when Chrome changes as long as the intended effect of the policy
+  remains intact.
+- The process for removing policies is to deprecate them first, wait a
+  few releases (if possible) and then remove them. Make sure you put the
+  deprecated flag if you deprecate a policy.

@@ -1,0 +1,8 @@
+Thanks for improving Chromium enterprise features! In general,
+enterprise policies should work across all platforms and need to remain
+backward compatible across several Chrome versions. To help avoid common
+pitfalls, policy review bot has analyzed your change and added comments
+with checklists of things to watch out for.
+
+Please direct comments and complaints about this service to
+chrome-enterprise@google.com and/or mnissler@chromium.org.

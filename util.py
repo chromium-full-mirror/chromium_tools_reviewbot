@@ -2,6 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
+import collections
 import email.utils
 
 
@@ -17,7 +18,7 @@ def lazy_property(func):
   return property(get_property)
 
 
-class LazyDict(object):
+class LazyDict(collections.Mapping):
   """A simple immutable and lazy dictionary.
 
   This looks up the actual key values on first access to the key and caches the
@@ -33,18 +34,25 @@ class LazyDict(object):
       self.items[name] = self.lookup(name)
     return self.items[name]
 
+  def __iter__(self):
+    return self.items.iterkeys()
 
-class ObjectDict(object):
+  def __len__(self):
+    return len(self.items)
+
+  def __repr__(self):
+    return repr(self.items)
+
+
+class ObjectDict(collections.Mapping):
   """Wraps a dictionary to allow value retrieval in dot notation."""
 
   def __init__(self, data):
-    self.data = data
+    self.__data = data
 
   def __getitem__(self, name):
-    val = self.data[name]
-    if type(val) == dict:
-      return ObjectDict(val)
-    return val
+    val = self.__data[name]
+    return ObjectDict.wrap(val)
 
   def __getattr__(self, name):
     try:
@@ -53,7 +61,19 @@ class ObjectDict(object):
       raise AttributeError(e)
 
   def __iter__(self):
-    return self.data.iterkeys()
+    return self.__data.iterkeys()
+
+  def __len__(self):
+    return len(self.__data)
+
+  def __repr__(self):
+    return repr(self.__data)
+
+  @staticmethod
+  def wrap(val):
+    if isinstance(val, dict):
+      return ObjectDict(val)
+    return val
 
 
 def get_emails(string):
