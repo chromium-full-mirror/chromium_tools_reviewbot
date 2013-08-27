@@ -61,7 +61,7 @@ class AppConfigHandler(webapp2.RequestHandler):
     for field in FIELDS:
       self.response.write(
           '<tr><td>%s</td><td><textarea name="%s">%s</textarea></td></tr>' %
-          (field, field, cgi.escape(getattr(app_config, field, ''))))
+          (field, field, cgi.escape(getattr(app_config, field) or '')))
     self.response.write('<tr><td><input type="submit" value="Set"></td></tr>')
     self.response.write('</table><form></body></body>')
 
