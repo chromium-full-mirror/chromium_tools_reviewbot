@@ -31,6 +31,16 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
 
+def prepare_address_list(addr, email_list):
+  """Prepares |email_list| for use as rietveld query parameter.
+
+  Canonicalizes the entries in |email_list|, removes any occurrences of |addr|,
+  joins the entries with commas and returns the result.
+  """
+  return ','.join([util.canonicalize_email(entry)
+                   for entry in email_list if entry != addr])
+
+
 def process(addr, message, review, rietveld):
   """Handles reviews for chrome/app/policy/policy_templates.json.
 
@@ -78,4 +88,7 @@ def process(addr, message, review, rietveld):
   # Finally, post all inline comments.
   if len(chunks) > 0:
     template = JINJA_ENVIRONMENT.get_template(REVIEW_MESSAGE_TEMPLATE)
-    rietveld.post_comment(review.issue_id, template.render(review=review), True)
+    rietveld.publish_inline_comments(
+        review.issue_id, template.render(review=review),
+        prepare_address_list(addr, review.issue_data.reviewers),
+        prepare_address_list(addr, review.issue_data.cc))

@@ -66,14 +66,18 @@ class Rietveld(object):
   def post_issue_data(self, issue, req, payload):
     return self.post_data('%s/%s' % (issue, req), payload)
 
-  def post_comment(self, issue, comment, submit_inline_comments=False):
+  def publish_inline_comments(self, issue, comment, reviewers, cc,
+                              subject=None, send_mail=False):
     publish_payload = {
-        'message_only': 0 if submit_inline_comments else 1,
-        'send_mail': 1,
-        'add_as_reviewer': 0,
+        'cc': cc,
         'message': comment,
+        'message_only': 0,
         'no_redirect': 1,
+        'reviewers': reviewers,
+        'send_mail': 1 if send_mail else 0,
     }
+    if subject is not None:
+      publish_payload['subject'] = subject
     self.post_issue_data(issue, 'publish', publish_payload)
 
   def add_inline_comment(self, issue_id, patchset_id, patch_id, line, a_or_b,

@@ -86,3 +86,10 @@ def get_emails(string):
       [ 'test@example.com', 'committers@chromium.org' ]
   """
   return [entry[1] for entry in email.utils.getaddresses([string])]
+
+
+def canonicalize_email(address):
+  """Takes an email address and returns its canonicalized form."""
+  emails = get_emails(address)
+  assert len(emails) == 1
+  return emails[0]
